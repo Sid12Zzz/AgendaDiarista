@@ -1,6 +1,8 @@
 package com.agendadiarista.entity;
 
+import com.agendadiarista.DTO.ProfissionalDTO;
 import jakarta.persistence.*;
+import org.springframework.beans.BeanUtils;
 
 @Entity
 @Table(name = "profissionais")
@@ -19,6 +21,12 @@ public class Profissional {
     @Column(name = "email", length = 100)
     private String email;
 
+
+    public Profissional(ProfissionalDTO profissionalDTO){
+        BeanUtils.copyProperties(profissionalDTO, this);
+    }
+
+    public Profissional(){}
 
     // Getters and Setters
     public Long getId() {

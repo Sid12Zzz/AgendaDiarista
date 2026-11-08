@@ -2,6 +2,7 @@ package com.agendadiarista.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.agendadiarista.entity.StatusPagamento.PENDENTE;
@@ -22,8 +23,8 @@ public class Agendamento {
     @JoinColumn(name = "profissional_id", nullable = false)
     private Profissional profissional;
 
-    @Column(name = "data_hora", nullable = false)
-    private LocalDateTime dataHora;
+    @Column(name = "data", nullable = false)
+    private LocalDate dataHora;
 
     @Column(name = "status", nullable = false)
     private StatusPagamento statusPagamento = PENDENTE;
@@ -32,6 +33,15 @@ public class Agendamento {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Getters and Setters
+
+public LocalDate getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(LocalDate dataHora) {
+        this.dataHora = dataHora;
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,14 +64,6 @@ public class Agendamento {
 
     public void setProfissional(Profissional profissional) {
         this.profissional = profissional;
-    }
-
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
     }
 
     public StatusPagamento getStatusPagamento() {

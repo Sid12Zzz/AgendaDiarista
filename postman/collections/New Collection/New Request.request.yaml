@@ -1,0 +1,27 @@
+$kind: http-request
+url: http://localhost:8080/agendamentos/1
+method: GET
+body:
+  type: json
+  content: "{\r
+
+    \  \"dataHora\": \"2026-11-15\",\r
+
+    \r
+
+    \  \"cliente\": {\r
+
+    \    \"id\": 1\r
+
+    \  },\r
+
+    \r
+
+    \  \"profissional\": {\r
+
+    \    \"id\": 1\r
+
+    \  }\r
+
+    }"
+order: 1000

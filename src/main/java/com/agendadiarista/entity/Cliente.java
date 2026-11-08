@@ -1,9 +1,17 @@
 package com.agendadiarista.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
+@NoArgsConstructor
 public class Cliente {
 
     @Id
@@ -11,16 +19,29 @@ public class Cliente {
     private Long id;
 
     @Column(name = "nome", nullable = false, length = 100)
+    @NotBlank @Size(max = 100)
     private String nome;
 
     @Column(name = "telefone", length = 20)
     private String telefone;
 
+    public Cliente( String endereco, String email, String telefone, String nome) {
+
+        this.endereco = endereco;
+        this.email = email;
+        this.telefone = telefone;
+        this.nome = nome;
+    }
+
     @Column(name = "email", length = 100)
+    @Email @Size(max = 100)
     private String email;
 
     @Column(name = "endereco", length = 200)
     private String endereco;
+
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    private List<Agendamento> agendamentos= new ArrayList<>();
 
 
     // Getters and Setters
