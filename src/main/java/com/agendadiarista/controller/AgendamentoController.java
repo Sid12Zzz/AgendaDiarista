@@ -1,7 +1,10 @@
 package com.agendadiarista.controller;
 
+import com.agendadiarista.DTO.AgendamentoRequestDTO;
+import com.agendadiarista.DTO.AgendamentoResponseDTO;
 import com.agendadiarista.entity.Agendamento;
 import com.agendadiarista.service.AgendamentoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,25 +22,26 @@ public class AgendamentoController {
     //------------------ C R U D --------------------------
 
     @PostMapping
-    public ResponseEntity<Agendamento> salvar(@RequestBody Agendamento agendamento){
-        Agendamento novoAgendamento = agendamentoService.salvar(agendamento);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoAgendamento);
+    public ResponseEntity<AgendamentoResponseDTO> salvar(@RequestBody @Valid AgendamentoRequestDTO dto){
+        AgendamentoResponseDTO response = agendamentoService.salvar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Agendamento> atualizar(@PathVariable Long id, @RequestBody Agendamento agendamento){
-        Agendamento agendamentoAtualizado = agendamentoService.atualizar(id, agendamento);
-        return ResponseEntity.status(HttpStatus.OK).body(agendamentoAtualizado);
+    public ResponseEntity<AgendamentoResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AgendamentoRequestDTO dto){
+        AgendamentoResponseDTO response = agendamentoService.atualizar(id, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Agendamento> buscarPorId(@PathVariable Long id){
-        return ResponseEntity.ok(agendamentoService.buscarPorId(id));
+    public ResponseEntity<AgendamentoResponseDTO> buscarPorId(@PathVariable Long id){
+        AgendamentoResponseDTO response = agendamentoService.buscarPorId(id);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> listarTodos(){
-        List<Agendamento> agendamentos = agendamentoService.buscarTodos();
+    public ResponseEntity<List<AgendamentoResponseDTO>> listarTodos(){
+        List<AgendamentoResponseDTO> agendamentos = agendamentoService.buscarTodos();
         return ResponseEntity.ok(agendamentos);
     }
 

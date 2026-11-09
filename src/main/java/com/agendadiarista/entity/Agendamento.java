@@ -1,6 +1,7 @@
 package com.agendadiarista.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class Agendamento {
     private StatusPagamento statusPagamento = PENDENTE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Getters and Setters

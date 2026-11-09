@@ -10,9 +10,7 @@ public class ProfissionalDTO {
     private String telefone;
     private String email;
 
-    public ProfissionalDTO(Profissional profissional){
-        BeanUtils.copyProperties(profissional, this);
-    }
+
 
     public ProfissionalDTO(){}
 
