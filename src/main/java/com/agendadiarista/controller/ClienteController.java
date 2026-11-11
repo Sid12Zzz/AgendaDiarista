@@ -29,7 +29,7 @@ public class ClienteController {
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizar(@PathVariable Long id,Cliente dadosAtualizados){
         Cliente cliente = clienteService.atualizar(id, dadosAtualizados);
-        return ResponseEntity.status(HttpStatus.OK).body(dadosAtualizados);
+        return ResponseEntity.status(HttpStatus.OK).body(cliente);
     }
 
     @DeleteMapping("/{id}")

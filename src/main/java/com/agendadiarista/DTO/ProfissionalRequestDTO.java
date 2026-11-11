@@ -1,26 +1,18 @@
 package com.agendadiarista.DTO;
 
-import com.agendadiarista.entity.Profissional;
-import org.springframework.beans.BeanUtils;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-public class ProfissionalDTO {
 
-    private Long id;
+public class ProfissionalRequestDTO {
+
+    @NotBlank(message = "O nome é obrigatório")
     private String nome;
+    @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
+    @Email
     private String email;
 
-
-
-    public ProfissionalDTO(){}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;

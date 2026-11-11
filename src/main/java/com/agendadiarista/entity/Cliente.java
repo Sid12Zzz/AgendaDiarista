@@ -25,6 +25,13 @@ public class Cliente {
     @Column(name = "telefone", length = 20)
     private String telefone;
 
+    @Column(name = "email", length = 100)
+    @Email @Size(max = 100)
+    private String email;
+
+    @Column(name = "endereco", length = 200)
+    private String endereco;
+
     public Cliente( String endereco, String email, String telefone, String nome) {
 
         this.endereco = endereco;
@@ -32,13 +39,6 @@ public class Cliente {
         this.telefone = telefone;
         this.nome = nome;
     }
-
-    @Column(name = "email", length = 100)
-    @Email @Size(max = 100)
-    private String email;
-
-    @Column(name = "endereco", length = 200)
-    private String endereco;
 
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
     private List<Agendamento> agendamentos= new ArrayList<>();

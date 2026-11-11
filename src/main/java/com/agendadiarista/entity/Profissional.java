@@ -1,6 +1,6 @@
 package com.agendadiarista.entity;
 
-import com.agendadiarista.DTO.ProfissionalDTO;
+import com.agendadiarista.DTO.ProfissionalResponseDTO;
 import jakarta.persistence.*;
 import org.springframework.beans.BeanUtils;
 
@@ -22,7 +22,7 @@ public class Profissional {
     private String email;
 
 
-    public Profissional(ProfissionalDTO profissionalDTO){
+    public Profissional(ProfissionalResponseDTO profissionalDTO){
         BeanUtils.copyProperties(profissionalDTO, this);
     }
 

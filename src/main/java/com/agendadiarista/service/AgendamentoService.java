@@ -12,7 +12,11 @@ import com.agendadiarista.repository.ProfissionalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
+import java.time.LocalDate;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,23 @@ public class AgendamentoService {
     private final ProfissionalRepository profissionalRepository;
 
     public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto){
+        //Validação de agendamentos aos sábados e domingos.
+        if(dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY || dto.getDataHora().getDayOfWeek() == DayOfWeek.SUNDAY){
+            throw new IllegalArgumentException("Não é permitido realizar agendamento aos sábados ou domingos, entre em contato com a profissional.");
+        }
+        //Validação de 2 agendamentos numa mesma data.
+        LocalDate dataNovoAgendamento = dto.getDataHora();
+        for (Agendamento a: agendamentoRepository.findAll()){
+            LocalDate dataAgendamentoExistente = a.getDataHora();
+
+            boolean mesmoCliente = a.getCliente().getId().equals(dto.getClienteId());
+            boolean mesmaData = dataAgendamentoExistente.equals(dataNovoAgendamento);
+
+            if (mesmoCliente && mesmaData){
+                throw new IllegalArgumentException("O Profissional já possui um agendamento este dia.");
+            }
+        }
+
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o id: " + dto.getClienteId()));
         Profissional profissional = profissionalRepository.findById(dto.getProfissionalId())
@@ -57,6 +78,22 @@ public class AgendamentoService {
     }
 
     public AgendamentoResponseDTO atualizar(Long id, AgendamentoRequestDTO dto){
+        if(dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY || dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY){
+            throw new IllegalArgumentException("Não é permitido realizar agendamento aos sábados ou domingos, entre em contato com a profissional.");
+        }
+
+        LocalDate dataNovoAgendamento = dto.getDataHora();
+        for(Agendamento a: agendamentoRepository.findAll()){
+            LocalDate dataAgendamentoExistente = a.getDataHora();
+
+            boolean mesmoCliente =  a.getCliente().getId().equals(dto.getClienteId());
+            boolean mesmaData = dataAgendamentoExistente.equals(dataNovoAgendamento);
+
+            if(mesmoCliente && mesmaData){
+                throw new IllegalArgumentException("O Profissional já possui um agendamento este dia.");
+            }
+        }
+
         Agendamento agendamentoEncontrado = encontrarPorId(id);
 
         Cliente cliente = clienteRepository.findById(dto.getClienteId())

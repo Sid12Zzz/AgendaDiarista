@@ -1,17 +1,23 @@
 package com.agendadiarista.DTO;
 
-import com.agendadiarista.entity.Agendamento;
+import com.agendadiarista.entity.Profissional;
+import org.springframework.beans.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ProfissionalResponseDTO {
 
-public class ClienteDTO {
     private Long id;
     private String nome;
     private String telefone;
     private String email;
-    private String endereco;
-    private List<Agendamento> agendamentos= new ArrayList<>();
+
+    public ProfissionalResponseDTO(Profissional profissional) {
+        BeanUtils.copyProperties(profissional, this);
+        this.id = profissional.getId();
+        this.nome = profissional.getNome();
+        this.telefone = profissional.getTelefone();
+        this.email = profissional.getEmail();
+
+    }
 
     public Long getId() {
         return id;
@@ -43,21 +49,5 @@ public class ClienteDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
-    public List<Agendamento> getAgendamentos() {
-        return agendamentos;
-    }
-
-    public void setAgendamentos(List<Agendamento> agendamentos) {
-        this.agendamentos = agendamentos;
     }
 }
