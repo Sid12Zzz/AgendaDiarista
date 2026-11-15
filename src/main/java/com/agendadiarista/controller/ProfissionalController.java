@@ -2,6 +2,7 @@ package com.agendadiarista.controller;
 
 import com.agendadiarista.entity.Profissional;
 import com.agendadiarista.service.ProfissionalService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,13 @@ public class ProfissionalController {
     //------------------Crud--------------------------
 
     @PostMapping
-    public ResponseEntity<Profissional> salvar(@RequestBody Profissional profissional){
+    public ResponseEntity<Profissional> salvar(@RequestBody @Valid Profissional profissional){
         Profissional novoprofissional = profissionalService.salvar(profissional);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoprofissional);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Profissional> atualizar(@PathVariable Long id, Profissional profissional){
+    public ResponseEntity<Profissional> atualizar(@PathVariable Long id, @Valid Profissional profissional){
         Profissional profissionalatualizado = profissionalService.atualizar(id, profissional);
         return ResponseEntity.status(HttpStatus.OK).body(profissionalatualizado);
     }

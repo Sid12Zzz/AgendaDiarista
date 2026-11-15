@@ -1,10 +1,12 @@
 package com.agendadiarista.service;
 
+import com.agendadiarista.DTO.ClienteRequestDTO;
 import com.agendadiarista.entity.Cliente;
 import com.agendadiarista.exceptions.ResourceNotFoundException;
 import com.agendadiarista.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,21 +16,28 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
 
-    public Cliente salvar(Cliente cliente){
-        return clienteRepository.save(cliente);
+    @Transactional
+    public Cliente salvar(ClienteRequestDTO dadosCliente) {
+        Cliente novoCliente = new Cliente();
+        novoCliente.setNome(dadosCliente.getNome());
+        novoCliente.setTelefone(dadosCliente.getTelefone());
+        novoCliente.setEmail(dadosCliente.getEmail());
+        novoCliente.setEndereco(dadosCliente.getEndereco());
+
+        return clienteRepository.save(novoCliente);
     }
 
-    public Cliente buscarPorId(Long id){
+    public Cliente buscarPorId(Long id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o ID:" + id));
-                //exceção de recurso nao encontrado
     }
 
-    public List<Cliente> buscarTodos(){
+    public List<Cliente> buscarTodos() {
         return clienteRepository.findAll();
     }
 
-    public Cliente atualizar(Long id, Cliente dadosAtualizados){
+    @Transactional
+    public Cliente atualizar(Long id, ClienteRequestDTO dadosAtualizados) {
         Cliente clienteEncontrado = buscarPorId(id);
         clienteEncontrado.setNome(dadosAtualizados.getNome());
         clienteEncontrado.setEmail(dadosAtualizados.getEmail());
@@ -38,9 +47,9 @@ public class ClienteService {
         return clienteRepository.save(clienteEncontrado);
     }
 
-    public void deletar(Long id){
+    @Transactional
+    public void deletar(Long id) {
         Cliente clienteEncontrado = buscarPorId(id);
         clienteRepository.delete(clienteEncontrado);
     }
 }
-

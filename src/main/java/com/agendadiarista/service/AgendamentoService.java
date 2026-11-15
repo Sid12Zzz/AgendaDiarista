@@ -78,7 +78,7 @@ public class AgendamentoService {
     }
 
     public AgendamentoResponseDTO atualizar(Long id, AgendamentoRequestDTO dto){
-        if(dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY || dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY){
+        if(dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY || dto.getDataHora().getDayOfWeek() == DayOfWeek.SUNDAY){
             throw new IllegalArgumentException("Não é permitido realizar agendamento aos sábados ou domingos, entre em contato com a profissional.");
         }
 

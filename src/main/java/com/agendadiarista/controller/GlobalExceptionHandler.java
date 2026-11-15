@@ -45,7 +45,22 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Erro de validação nos campos",
-    //            camposErros,
+                camposErros,
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErroRespostaDTO> handleIllegalArgument(
+            IllegalArgumentException ex, HttpServletRequest request) {
+
+        ErroRespostaDTO erro = new ErroRespostaDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Regra de negócio violada",
+                ex.getMessage(),
                 request.getRequestURI()
         );
 

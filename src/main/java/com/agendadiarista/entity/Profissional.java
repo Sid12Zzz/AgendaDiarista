@@ -2,6 +2,8 @@ package com.agendadiarista.entity;
 
 import com.agendadiarista.DTO.ProfissionalResponseDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.BeanUtils;
 
 @Entity
@@ -13,12 +15,15 @@ public class Profissional {
     private Long id;
 
     @Column(name = "nome", nullable = false, length = 100)
+    @NotBlank(message = "O nome é obrigatório")
     private String nome;
 
     @Column(name = "telefone", length = 20)
+    @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
 
     @Column(name = "email", length = 100)
+    @Email(message = "E-mail inválido")
     private String email;
 
 
