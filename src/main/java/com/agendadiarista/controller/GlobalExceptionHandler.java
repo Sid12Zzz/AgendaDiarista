@@ -1,4 +1,4 @@
-package com.agendadiarista.controller;
+/*package com.agendadiarista.controller;
 
 import com.agendadiarista.DTO.ErroRespostaDTO;
 import com.agendadiarista.DTO.ErroValidacaoDTO;
@@ -66,4 +66,4 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
-}
+}*/

@@ -26,21 +26,12 @@ public class AgendamentoService {
     private final ProfissionalRepository profissionalRepository;
 
     public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto){
-        //Validação de agendamentos aos sábados e domingos.
         if(dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY || dto.getDataHora().getDayOfWeek() == DayOfWeek.SUNDAY){
             throw new IllegalArgumentException("Não é permitido realizar agendamento aos sábados ou domingos, entre em contato com a profissional.");
         }
-        //Validação de 2 agendamentos numa mesma data.
-        LocalDate dataNovoAgendamento = dto.getDataHora();
-        for (Agendamento a: agendamentoRepository.findAll()){
-            LocalDate dataAgendamentoExistente = a.getDataHora();
 
-            boolean mesmoCliente = a.getCliente().getId().equals(dto.getClienteId());
-            boolean mesmaData = dataAgendamentoExistente.equals(dataNovoAgendamento);
-
-            if (mesmoCliente && mesmaData){
-                throw new IllegalArgumentException("O Profissional já possui um agendamento este dia.");
-            }
+        if (agendamentoRepository.existsByProfissionalIdAndDataHora(dto.getProfissionalId(), dto.getDataHora())) {
+            throw new IllegalArgumentException("O Profissional já possui um agendamento este dia.");
         }
 
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
@@ -82,16 +73,8 @@ public class AgendamentoService {
             throw new IllegalArgumentException("Não é permitido realizar agendamento aos sábados ou domingos, entre em contato com a profissional.");
         }
 
-        LocalDate dataNovoAgendamento = dto.getDataHora();
-        for(Agendamento a: agendamentoRepository.findAll()){
-            LocalDate dataAgendamentoExistente = a.getDataHora();
-
-            boolean mesmoCliente =  a.getCliente().getId().equals(dto.getClienteId());
-            boolean mesmaData = dataAgendamentoExistente.equals(dataNovoAgendamento);
-
-            if(mesmoCliente && mesmaData){
-                throw new IllegalArgumentException("O Profissional já possui um agendamento este dia.");
-            }
+        if (agendamentoRepository.existsByProfissionalIdAndDataHoraAndIdNot(dto.getProfissionalId(), dto.getDataHora(), id)) {
+            throw new IllegalArgumentException("O Profissional já possui um agendamento este dia.");
         }
 
         Agendamento agendamentoEncontrado = encontrarPorId(id);
@@ -100,7 +83,6 @@ public class AgendamentoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o id: " + dto.getClienteId()));
         Profissional profissional = profissionalRepository.findById(dto.getProfissionalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado com o id: " + dto.getProfissionalId()));
-
 
         agendamentoEncontrado.setDataHora(dto.getDataHora());
         agendamentoEncontrado.setCliente(cliente);

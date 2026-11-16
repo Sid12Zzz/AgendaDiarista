@@ -1,6 +1,9 @@
 package com.agendadiarista.controller;
 
+import com.agendadiarista.DTO.ProfissionalRequestDTO;
+import com.agendadiarista.DTO.ProfissionalResponseDTO;
 import com.agendadiarista.entity.Profissional;
+import com.agendadiarista.exceptions.ResourceNotFoundException;
 import com.agendadiarista.service.ProfissionalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/profissionais")
@@ -17,38 +21,50 @@ public class ProfissionalController {
 
     private final ProfissionalService profissionalService;
 
-    //------------------Crud--------------------------
-
     @PostMapping
-    public ResponseEntity<Profissional> salvar(@RequestBody @Valid Profissional profissional){
-        Profissional novoprofissional = profissionalService.salvar(profissional);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoprofissional);
+    public ResponseEntity<ProfissionalResponseDTO> salvar(@RequestBody @Valid ProfissionalRequestDTO dadosProfissional) {
+        Profissional novoProfissional = profissionalService.salvar(dadosProfissional);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ProfissionalResponseDTO(novoProfissional));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Profissional> atualizar(@PathVariable Long id, @Valid Profissional profissional){
-        Profissional profissionalatualizado = profissionalService.atualizar(id, profissional);
-        return ResponseEntity.status(HttpStatus.OK).body(profissionalatualizado);
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody @Valid ProfissionalRequestDTO profissional) {
+        try {
+            Profissional profissionalAtualizado = profissionalService.atualizar(id, profissional);
+            return ResponseEntity.ok(new ProfissionalResponseDTO(profissionalAtualizado));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Profissional> buscarPorId(@PathVariable Long id){
-        return ResponseEntity.ok(profissionalService.buscarPorId(id));
+    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+        try {
+            Profissional profissional = profissionalService.buscarPorId(id);
+            return ResponseEntity.ok(new ProfissionalResponseDTO(profissional));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<Profissional>> listarTodos(){
-        List<Profissional> profissionais= profissionalService.buscarTodos();
+    public ResponseEntity<List<ProfissionalResponseDTO>> listarTodos() {
+        List<ProfissionalResponseDTO> profissionais = profissionalService.buscarTodos()
+                .stream()
+                .map(ProfissionalResponseDTO::new)
+                .toList();
         return ResponseEntity.ok(profissionais);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id){
-        profissionalService.deletar(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deletar(@PathVariable Long id) {
+        try {
+            profissionalService.deletar(id);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
     }
-
-
-
-
 }

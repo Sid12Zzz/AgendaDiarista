@@ -3,6 +3,7 @@ package com.agendadiarista.service;
 import com.agendadiarista.DTO.ClienteRequestDTO;
 import com.agendadiarista.entity.Cliente;
 import com.agendadiarista.exceptions.ResourceNotFoundException;
+import com.agendadiarista.repository.AgendamentoRepository;
 import com.agendadiarista.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ClienteService {
-
+    private final AgendamentoRepository agendamentoRepository;
     private final ClienteRepository clienteRepository;
 
     @Transactional
@@ -50,6 +51,10 @@ public class ClienteService {
     @Transactional
     public void deletar(Long id) {
         Cliente clienteEncontrado = buscarPorId(id);
+
+        if (agendamentoRepository.existsByClienteId(id)) {
+            throw new IllegalArgumentException("Não é possível excluir o cliente pois existem agendamentos vinculados a ele.");
+        }
         clienteRepository.delete(clienteEncontrado);
     }
 }
