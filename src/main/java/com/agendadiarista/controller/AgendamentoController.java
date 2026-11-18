@@ -2,6 +2,7 @@ package com.agendadiarista.controller;
 
 import com.agendadiarista.DTO.AgendamentoRequestDTO;
 import com.agendadiarista.DTO.AgendamentoResponseDTO;
+import com.agendadiarista.entity.StatusPagamento;
 import com.agendadiarista.exceptions.ResourceNotFoundException;
 import com.agendadiarista.service.AgendamentoService;
 import jakarta.validation.Valid;
@@ -68,5 +69,22 @@ public class AgendamentoController {
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
         }
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<?> atualizarStatusPagamento(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> payLoad) {
+        try{
+            StatusPagamento statusPagamento = StatusPagamento.valueOf(payLoad.get("statusPagamento"));
+            AgendamentoResponseDTO response = agendamentoService.alterarStatusPagamento(id, statusPagamento);
+            return ResponseEntity.ok(response);
+        }catch(IllegalArgumentException | NullPointerException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
+        catch (ResourceNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+        }
+
     }
 }

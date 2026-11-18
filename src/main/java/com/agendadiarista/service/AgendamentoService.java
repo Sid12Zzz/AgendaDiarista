@@ -2,9 +2,11 @@ package com.agendadiarista.service;
 
 import com.agendadiarista.DTO.AgendamentoRequestDTO;
 import com.agendadiarista.DTO.AgendamentoResponseDTO;
+import com.agendadiarista.DTO.ProfissionalResponseDTO;
 import com.agendadiarista.entity.Agendamento;
 import com.agendadiarista.entity.Cliente;
 import com.agendadiarista.entity.Profissional;
+import com.agendadiarista.entity.StatusPagamento;
 import com.agendadiarista.exceptions.ResourceNotFoundException;
 import com.agendadiarista.repository.AgendamentoRepository;
 import com.agendadiarista.repository.ClienteRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 
@@ -24,6 +27,13 @@ public class AgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteRepository clienteRepository;
     private final ProfissionalRepository profissionalRepository;
+
+    public AgendamentoResponseDTO alterarStatusPagamento(Long id, StatusPagamento statusPagamento) {
+        Agendamento agenda = encontrarPorId(id);
+        agenda.setStatusPagamento(statusPagamento);
+        Agendamento agendaatualizada = agendamentoRepository.save(agenda);
+        return new AgendamentoResponseDTO(agendaatualizada);
+    }
 
     public AgendamentoResponseDTO salvar(AgendamentoRequestDTO dto){
         if(dto.getDataHora().getDayOfWeek() == DayOfWeek.SATURDAY || dto.getDataHora().getDayOfWeek() == DayOfWeek.SUNDAY){

@@ -973,23 +973,14 @@
 
         function openStatusModal(id, currentStatus) {
             statusCallback = async (newStatus) => {
-                const agendamentos = await apiRequest('/agendamentos');
-                const ag = agendamentos.find(a => a.id === id);
-                if (!ag) {
-                    throw new Error('Agendamento não encontrado');
-                }
-                await apiRequest(`/agendamentos/${id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        dataHora: ag.dataHora,
-                        clienteId: ag.clienteId,
-                        profissionalId: ag.profissionalId
-                    })
+            await apiRequest(`/agendamentos/${id}/status`, {
+            method: 'PATCH',
+            body: JSON.stringify({ statusPagamento: newStatus })
                 });
-            };
-            document.getElementById('modalStatusSelect').value = currentStatus;
-            openModal('modalStatus');
-        }
+                };
+                document.getElementById('modalStatusSelect').value = currentStatus;
+                openModal('modalStatus');
+            }
 
         function resetAgendamentoForm() {
             document.getElementById('formAgendamento').reset();

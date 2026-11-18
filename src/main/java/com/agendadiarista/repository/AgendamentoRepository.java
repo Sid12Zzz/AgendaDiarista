@@ -14,4 +14,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
  boolean existsByClienteId(Long clienteId);
 
  boolean existsByProfissionalId(Long profissionalId);
+
 }
